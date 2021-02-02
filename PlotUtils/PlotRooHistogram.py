@@ -25,7 +25,6 @@ class PlotRooHistogram(PlotHistogram):
             for comp, settings in kwargs['components'].items():
                 tmp.update( {self.tf1fromroopdfcomponents( hist, func , comp ) : settings} )
             kwargs['components'] = tmp
-
         super(PlotRooHistogram, self).__init__(th1hist,func=tfunc,simulation=simulation,preliminary=preliminary,pull=pull,**kwargs)
 
     def th1fromroodatahist(self,roohist):
@@ -34,9 +33,9 @@ class PlotRooHistogram(PlotHistogram):
         '''
         hist = roohist.createHistogram( 'hist_conv' , self.var )
         # Dirty hack to get weights.
-        for i in range(1,hist.GetNbinsX()):
-            roohist.get(i)
-            hist.SetBinContent(i,roohist.weight())
+        #for i in range(1,hist.GetNbinsX()):
+        #    roohist.get(i)
+        #    hist.SetBinContent(i,roohist.weight())
 
         return hist
 

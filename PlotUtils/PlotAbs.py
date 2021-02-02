@@ -49,8 +49,8 @@ class PlotAbs:
         Plot everything.
         '''
         # Axis.
-        plt.ylabel('$%s$'%self.xtitle,fontsize=35,horizontalalignment='right', y=1.0)
-        plt.xlabel('$%s$'%self.ytitle,fontsize=35,horizontalalignment='right', x=1.0)
+        plt.xlabel('$%s$'%self.xtitle,fontsize=35,horizontalalignment='right', x=1.0)
+        plt.ylabel('$%s$'%self.ytitle,fontsize=35,horizontalalignment='right', y=1.0)
         self.ax.tick_params(axis='both', which='major', labelsize=30)
         if ( self.xmin and self.xmax ): self.ax.set_xlim(self.xmin,self.xmax)
         if ( self.ymin and self.ymax ): self.ax.set_ylim(self.ymin,self.ymax)
@@ -66,6 +66,7 @@ class PlotAbs:
         		"top"    : 0.98
         		}
 
+        self.fig.subplots_adjust(hspace=0)
         self.fig.subplots_adjust(**margins)
 
         if ( output ):
@@ -73,12 +74,12 @@ class PlotAbs:
             print('Saved figure to '+output)
         return self.fig
 
-    def add_LHCbLabel(self,simulation=False,preliminary=True,xpos=0.7,ypos=0.9,lhcbfontsize=35,labelfontsize=25):
+    def add_LHCbLabel(self,simulation=False,preliminary=True,xpos=0.8,ypos=0.9,lhcbfontsize=35,labelfontsize=25):
         #Add LHCb logo
-        self.ax.text(xpos*self.xmax,ypos*self.ymax,"\\textbf{LHCb}",fontsize=lhcbfontsize)
-        if ( simulation ): self.ax.text(0.7*self.xmax,0.85*self.ymax,"\\textit{simulation}",fontsize=labelfontsize)
+        self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),"\\textbf{LHCb}",fontsize=lhcbfontsize)
+        if ( simulation ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.06)*(self.ymax-self.ymin)),"\\textit{simulation}",fontsize=labelfontsize)
         else:
-            if ( preliminary ): self.ax.text(0.7*self.xmax,0.85*self.ymax,"\\textit{preliminary}",fontsize=labelfontsize)
+            if ( preliminary ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.06)*(self.ymax-self.ymin)),"\\textit{preliminary}",fontsize=labelfontsize)
 
         return
 
@@ -134,9 +135,12 @@ class PlotAbs:
         self.ax_pull.axhline(y=3,color='red',linestyle='--')
         self.ax_pull.axhline(y=-3,color='red',linestyle='--')
 
-        self.ax_pull.set_ylabel("Residual ($\sigma$)",fontsize=25)
+        self.ax_pull.set_ylabel("Residual ($\sigma$)",fontsize=20)
         self.ax_pull.tick_params(axis='both', which='major', labelsize=20)
+        self.ax_pull.set_yticks((-3,0,3))
         if ( self.xmin and self.xmax ): self.ax_pull.set_xlim(self.xmin,self.xmax)
         self.ax_pull.set_ylim(-5,5)
+        # Align y labels.
+        self.fig.align_ylabels((self.ax,self.ax_pull))
 
         return
