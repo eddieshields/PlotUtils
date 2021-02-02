@@ -51,7 +51,7 @@ class PlotHistogram(PlotAbs):
         self.add_errorbar(x,y,x_err,yerr,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,label='Data')
 
         # Add legend.
-        if ( self.legend ): self.add_legend(bbox_to_anchor=(0.8,0.2,1,0.8),loc='upper right',fontsize=20,ncol=1,frameon=False)
+        if ( self.legend ): self.add_legend(loc='upper left',fontsize=20,ncol=1,frameon=False)
 
         # Add label.
         self.add_LHCbLabel(simulation=self.simulation,preliminary=self.preliminary)
@@ -74,9 +74,7 @@ class PlotHistogram(PlotAbs):
                 fill = settings.pop('fill')
                 if ( fill == True ):
                     self.add_fill(x,y,**settings)
-                else:
-                    self.add_plot(x,y,**settings)
             else:
-                self.add_fill(x,y,**settings)
+                self.add_plot(x,y,**settings)
 
         return

@@ -32,10 +32,6 @@ class PlotRooHistogram(PlotHistogram):
         Convert a RooDataHist into a TH1.
         '''
         hist = roohist.createHistogram( 'hist_conv' , self.var )
-        # Dirty hack to get weights.
-        #for i in range(1,hist.GetNbinsX()):
-        #    roohist.get(i)
-        #    hist.SetBinContent(i,roohist.weight())
 
         return hist
 
