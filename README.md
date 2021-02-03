@@ -25,3 +25,13 @@ deactivate
 ```
 
 to deactivate it.
+
+### LXPLUS
+
+On lxplus the command
+
+```bash
+source /cvmfs/sft.cern.ch/lcg/views/setupViews.sh LCG_97python3 x86_64-centos7-gcc8-opt
+```
+
+is also needed.

@@ -13,9 +13,9 @@ Generally MatPlotLib produces nicer plots than root so this class
 converts ROOT objects like TH1 and TF1 and plots them in MatPlotLib.
 '''
 class PlotHistogram(PlotAbs):
-    def __init__(self,hist,func=False,pull=False,simulation=False,preliminary=True,legend=True,**kwargs):
+    def __init__(self,hist,func=False,pull=False,simulation=False,preliminary=True,legend=True,log_scale=False,**kwargs):
         # Initiate base class.
-        super(PlotHistogram, self).__init__(pull=pull)
+        super(PlotHistogram, self).__init__(pull=pull,log_scale=log_scale)
 
         self.hist = hist
         self.ff = func

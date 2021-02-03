@@ -15,14 +15,14 @@ class PlotGraph(PlotAbs):
 
         self.gr = gr
         self.ff = func
-        self.xmin = gr.GetXaxis().GetXmin()
-        self.xmax = gr.GetXaxis().GetXmax()
-        self.ymin = gr.GetYaxis().GetXmin()
-        self.ymax = gr.GetYaxis().GetXmax()
+        self.xmin = kwargs['xmin'] if ( kwargs.__contains__('xmin') ) else gr.GetXaxis().GetXmin()
+        self.xmax = kwargs['xmax'] if ( kwargs.__contains__('xmax') ) else gr.GetXaxis().GetXmax()
+        self.ymin = kwargs['ymin'] if ( kwargs.__contains__('ymin') ) else gr.GetYaxis().GetXmin()
+        self.ymax = kwargs['ymax'] if ( kwargs.__contains__('ymax') ) else gr.GetYaxis().GetXmax()
         # Set axis.
-        self.xtitle = kwargs['xtitle'] if ( 'xtitle' in kwargs) else gr.GetXaxis().GetTitle()
-        self.ytitle = kwargs['ytitle'] if ( 'ytitle' in kwargs) else gr.GetYaxis().GetTitle()
-        self.units  = kwargs['units']  if ( 'units' in kwargs ) else ''
+        self.xtitle = kwargs['xtitle'] if ( kwargs.__contains__('xtitle') ) else gr.GetXaxis().GetTitle()
+        self.ytitle = kwargs['ytitle'] if ( kwargs.__contains__('ytitle') ) else gr.GetYaxis().GetTitle()
+        self.units  = kwargs['units']  if ( kwargs.__contains__('units')  ) else ''
         # Blind.
         self.blind = blind
         # Miscellanious.
@@ -52,7 +52,7 @@ class PlotGraph(PlotAbs):
                 if ( self.blind ):
                     for i in range(len(one_x)):
                         one_y[i] = one_y[i] + self.blind*one_x[i]
-                self.add_confidenceband(two_x,two_y,two_yerr,color='green')
+                self.add_confidenceband(one_x,one_y,one_yerr,color='lime')
 
             if ( self.components ):
                 self.addcomponents( self.components )
@@ -67,6 +67,7 @@ class PlotGraph(PlotAbs):
         # Plot graph.
         x, y, x_err, y_err = listfromgrapherrors( self.gr )
         if ( self.blind ):
+            print('\033[0;31m BLINDING RESULT \033[0m')
             for i in range(len(x)):
                 y[i] = y[i] + self.blind*x[i]
         self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8)
@@ -83,7 +84,7 @@ class PlotGraph(PlotAbs):
         onesigma_band = r.TGraphErrors(1000)
         twosigma_band = r.TGraphErrors(1000)
         for i in range(1000):
-            x = (self.ymax/1000.)*i
+            x = (self.xmax/1000.)*i
             y = 0
             onesigma_band.SetPoint(i,x,y)
             twosigma_band.SetPoint(i,x,y)

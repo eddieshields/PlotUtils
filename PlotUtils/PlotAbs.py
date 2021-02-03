@@ -44,6 +44,9 @@ class PlotAbs:
         self.xtitle = kwargs['xtitle'] if ( kwargs.__contains__('xtitle') ) else ''
         self.ytitle = kwargs['ytitle'] if ( kwargs.__contains__('ytitle') ) else ''
 
+        # Scale.
+        self.logy = kwargs['log_scale'] if ( kwargs.__contains__('log_scale') ) else False
+
     def set_plot(self,output=0):
         '''
         Plot everything.
@@ -52,8 +55,9 @@ class PlotAbs:
         plt.xlabel('$%s$'%self.xtitle,fontsize=35,horizontalalignment='right', x=1.0)
         plt.ylabel('$%s$'%self.ytitle,fontsize=35,horizontalalignment='right', y=1.0)
         self.ax.tick_params(axis='both', which='major', labelsize=30)
-        if ( self.xmin and self.xmax ): self.ax.set_xlim(self.xmin,self.xmax)
-        if ( self.ymin and self.ymax ): self.ax.set_ylim(self.ymin,self.ymax)
+
+        if ( self.xmax ): self.ax.set_xlim(self.xmin,self.xmax)
+        if ( self.ymax ): self.ax.set_ylim(self.ymin,self.ymax)
 
 
         # Hide x labels and tick labels for all but bottom plot.
@@ -66,6 +70,7 @@ class PlotAbs:
         		"top"    : 0.98
         		}
 
+        if ( self.logy ): self.ax.set_yscale('log')
         self.fig.subplots_adjust(hspace=0)
         self.fig.subplots_adjust(**margins)
 
@@ -77,9 +82,9 @@ class PlotAbs:
     def add_LHCbLabel(self,simulation=False,preliminary=True,xpos=0.8,ypos=0.9,lhcbfontsize=35,labelfontsize=25):
         #Add LHCb logo
         self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),"\\textbf{LHCb}",fontsize=lhcbfontsize)
-        if ( simulation ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.06)*(self.ymax-self.ymin)),"\\textit{simulation}",fontsize=labelfontsize)
+        if ( simulation ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.055)*(self.ymax-self.ymin)),"\\textit{simulation}",fontsize=labelfontsize)
         else:
-            if ( preliminary ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.06)*(self.ymax-self.ymin)),"\\textit{preliminary}",fontsize=labelfontsize)
+            if ( preliminary ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.055)*(self.ymax-self.ymin)),"\\textit{preliminary}",fontsize=labelfontsize)
 
         return
 
