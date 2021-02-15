@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 from matplotlib import rc
 from matplotlib import gridspec
 
+import math
+
 '''
 Abstract class that provides some helpful functions for plotting with 
 MatPlotLib.
@@ -15,7 +17,10 @@ It is the responsibility of the derived class to define the following:
   self.ytitle
 '''
 class PlotAbs:
-    def __init__(self,pull=False,**kwargs):
+    def __init__(self,pull=False,legend=True,
+                 xtitle='',ytitle='',
+                 xmin=0,xmax=0,ymin=0,ymax=0,
+                 log_scale=False,xsize=12,ysize=8):
         '''
         Initiate class
         '''
@@ -24,7 +29,7 @@ class PlotAbs:
         rc('text', usetex=True)
 
         # Create figure.
-        self.fig = plt.figure(figsize=(12,8))
+        self.fig = plt.figure(figsize=(xsize,ysize))
 
         self.pull = pull
         if ( pull ):
@@ -41,11 +46,11 @@ class PlotAbs:
         self.ymax = 0
 
         # Default titles.
-        self.xtitle = kwargs['xtitle'] if ( kwargs.__contains__('xtitle') ) else ''
-        self.ytitle = kwargs['ytitle'] if ( kwargs.__contains__('ytitle') ) else ''
+        self.xtitle = xtitle
+        self.ytitle = ytitle
 
         # Scale.
-        self.logy = kwargs['log_scale'] if ( kwargs.__contains__('log_scale') ) else False
+        self.logy = log_scale
 
     def set_plot(self,output=0):
         '''
@@ -77,10 +82,11 @@ class PlotAbs:
         if ( output ):
             self.fig.savefig( output )
             print('Saved figure to '+output)
-        return self.fig
+        return self.ax, self.fig
 
     def add_LHCbLabel(self,simulation=False,preliminary=True,xpos=0.8,ypos=0.9,lhcbfontsize=35,labelfontsize=25):
         #Add LHCb logo
+        if ( self.logy ): xpos, ypos = math.log(xpos), math.log(ypos)
         self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),"\\textbf{LHCb}",fontsize=lhcbfontsize)
         if ( simulation ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.055)*(self.ymax-self.ymin)),"\\textit{simulation}",fontsize=labelfontsize)
         else:

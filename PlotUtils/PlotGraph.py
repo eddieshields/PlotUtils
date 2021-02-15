@@ -70,7 +70,7 @@ class PlotGraph(PlotAbs):
             print('\033[0;31m BLINDING RESULT \033[0m')
             for i in range(len(x)):
                 y[i] = y[i] + self.blind*x[i]
-        self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8)
+        self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,label='Data')
 
         # Add legend.
         if ( self.legend ): self.add_legend(loc='upper left',fontsize=20,ncol=1,frameon=False)
