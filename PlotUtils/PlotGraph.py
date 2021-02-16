@@ -7,11 +7,13 @@ from PlotUtils.PlotAbs import PlotAbs
 from PlotUtils.ROOTutils import *
 
 class PlotGraph(PlotAbs):
-    def __init__(self,gr,func=False,errors=True,simulation=False,preliminary=True,confidencebands=False,blind=False,legend=True,**kwargs):
+    def __init__(self,gr,func=False,errors=True,
+                 simulation=False,preliminary=True,
+                 confidencebands=False,blind=False,legend=True,**kwargs):
         '''
         Initiate class
         '''
-        super(PlotGraph, self).__init__()
+        super(PlotGraph, self).__init__(**kwargs)
 
         self.gr = gr
         self.ff = func
@@ -44,14 +46,10 @@ class PlotGraph(PlotAbs):
             if ( self.confidencebands ):
                 onesigma_band, twosigma_band = self.calculateconfidencebands()
                 two_x, two_y, two_xerr, two_yerr = listfromgrapherrors( twosigma_band )
-                if ( self.blind ):
-                    for i in range(len(two_x)):
-                        two_y[i] = two_y[i] + self.blind*two_x[i]
+                if ( self.blind ): two_y = self.blindlist( two_y )
                 self.add_confidenceband(two_x,two_y,two_yerr,color='yellow')
                 one_x, one_y, one_xerr, one_yerr = listfromgrapherrors( onesigma_band )
-                if ( self.blind ):
-                    for i in range(len(one_x)):
-                        one_y[i] = one_y[i] + self.blind*one_x[i]
+                if ( self.blind ): one_y = self.blindlist( one_y )
                 self.add_confidenceband(one_x,one_y,one_yerr,color='lime')
 
             if ( self.components ):
@@ -59,17 +57,14 @@ class PlotGraph(PlotAbs):
             
             # Plot fit shape.
             x_vals, pdf_vals = listfromtf1( self.ff )
-            if ( self.blind ):
-                for i in range(len(x_vals)):
-                    pdf_vals[i] = pdf_vals[i] + self.blind*x_vals[i]
+            if ( self.blind ): pdf_vals = self.blindlist( pdf_vals )
             self.add_plot(x_vals,pdf_vals,color='blue',linewidth=2.5,label='Fit')
 
         # Plot graph.
         x, y, x_err, y_err = listfromgrapherrors( self.gr )
         if ( self.blind ):
             print('\033[0;31m BLINDING RESULT \033[0m')
-            for i in range(len(x)):
-                y[i] = y[i] + self.blind*x[i]
+            y = self.blindlist(y)
         self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,label='Data')
 
         # Add legend.
@@ -79,6 +74,11 @@ class PlotGraph(PlotAbs):
         self.add_LHCbLabel(simulation=self.simulation,preliminary=self.preliminary)
 
         return self.set_plot(output)
+
+    def blindlist(self,list):
+        for i in range(len(list)):
+            list[i] = list[i] + self.blind*list[i]
+        return list
 
     def calculateconfidencebands(self):
         onesigma_band = r.TGraphErrors(1000)
