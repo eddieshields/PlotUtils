@@ -1,8 +1,14 @@
+import matplotlib
 import matplotlib.pyplot as plt
 from matplotlib import rc
 from matplotlib import gridspec
+import matplotlib.font_manager
 
+import os
 import math
+
+# Load LHCb style
+matplotlib.rc_file(os.path.dirname(os.path.realpath(__file__))+'/matplotlibrc_LHCb')
 
 '''
 Abstract class that provides some helpful functions for plotting with 
@@ -25,7 +31,7 @@ class PlotAbs:
         Initiate class
         '''
         # Set font.
-        rc('font',**{'family':'serif','serif':['Roman']}) 
+        #rc('font',**{'family':'serif','serif':['Roman']}) 
         rc('text', usetex=True)
 
         # Create figure.
