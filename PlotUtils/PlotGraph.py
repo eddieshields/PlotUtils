@@ -8,7 +8,6 @@ from PlotUtils.ROOTutils import *
 
 class PlotGraph(PlotAbs):
     def __init__(self,gr,func=False,errors=True,
-                 simulation=False,preliminary=True,
                  confidencebands=False,blind=False,legend=True,**kwargs):
         '''
         Initiate class
@@ -30,8 +29,6 @@ class PlotGraph(PlotAbs):
         # Miscellanious.
         self.legend = legend
         self.errors = errors
-        self.simulation = simulation
-        self.preliminary = preliminary
         self.confidencebands = confidencebands
 
         self.components = kwargs['components'] if ( kwargs.__contains__('components') ) else {}
@@ -69,9 +66,6 @@ class PlotGraph(PlotAbs):
 
         # Add legend.
         if ( self.legend ): self.add_legend(loc='upper left',fontsize=20,ncol=1,frameon=False)
-
-        # Add label.
-        self.add_LHCbLabel(simulation=self.simulation,preliminary=self.preliminary)
 
         return self.set_plot(output)
 

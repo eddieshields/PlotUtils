@@ -49,7 +49,7 @@ def listfromgraph(gr):
 
 def listfromgrapherrors(gr):
     '''
-    Take the values from a TGraph and add them to a series 
+    Take the values from a TGraphErrors and add them to a series 
     of arrays
     '''
     xm, ym, x_errm, y_errm = gr.GetX(), gr.GetY(), gr.GetEX(), gr.GetEY()

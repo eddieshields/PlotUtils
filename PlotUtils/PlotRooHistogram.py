@@ -9,29 +9,39 @@ from PlotUtils.PlotHistogram import PlotHistogram
 from PlotUtils.ROOTutils import *
 
 class PlotRooHistogram(PlotHistogram):
-    def __init__(self,hist,var,func=False,weightedhist=False,simulation=False,preliminary=True,pull=True,**kwargs):
-        self.var = var
-        if ( weightedhist ):
-            th1hist = weightedhist
-        else:
-            th1hist = self.th1fromroodatahist( hist )
+    '''
+    Wrapper class that allows RooFit Objects to be plotted with MatPltiLib.
+    '''
+    
+    def __init__(self,x,data,model,pull=True,legend=False,label='Preliminary',log_scale=False,name='canv',xname='',yname=''):
+        self.x = x
+        self.data = data
+        self.model = model
 
-        if ( func ):
-            tfunc = self.tf1fromroopdf( hist , func )
+        hist = self.th1fromroodatahist( self.x , self.data )
 
-        # Components.
-        if ( 'components' in kwargs ):
-            tmp = {}
-            for comp, settings in kwargs['components'].items():
-                tmp.update( {self.tf1fromroopdfcomponents( hist, func , comp ) : settings} )
-            kwargs['components'] = tmp
-        super(PlotRooHistogram, self).__init__(th1hist,func=tfunc,simulation=simulation,preliminary=preliminary,pull=pull,**kwargs)
+        if ( self.model ): tfunc = self.tf1fromroopdf( self.data , self.model ) 
 
-    def th1fromroodatahist(self,roohist):
+        super(PlotRooHistogram, self).__init__(hist,func=tfunc,pull=pull,legend=legend,label=label,log_scale=log_scale,name=name,xname=xname,yname=yname)
+
+    def add_component(self,name,title='',style='l',**kwargs):
+        '''
+        Takes a component of a RooAbsPdf and adds to plot.
+        '''
+        func = self.tf1fromroopdfcomponents(self.data,self.model,name)
+        x, y = listfromtf1( func )
+        if ( style == 'l' ): self.add_plot(x,y,label=title,**kwargs)
+        elif ( style == 'f' ): self.add_fill(x,y,label=title,**kwargs)
+
+        return
+
+    def th1fromroodatahist(self,x,roohist):
         '''
         Convert a RooDataHist into a TH1.
         '''
-        hist = roohist.createHistogram( 'hist_conv' , self.var )
+        # Convert RooDataSet to RooDataHist
+        if ( isinstance(roohist,r.RooDataSet) ): roohist = roohist.binnedClone()
+        hist = roohist.createHistogram( x.GetName() )
 
         return hist
 
@@ -41,7 +51,7 @@ class PlotRooHistogram(PlotHistogram):
         '''
         # Dirty trick to get correct normalization.
         # Plot data and model on frame then get the model back from the frame.
-        frame = self.var.frame()
+        frame = self.x.frame()
         roohist.plotOn( frame )
         roofunc.plotOn( frame, r.RooFit.Name("pdf_object") )
         func = frame.findObject( "pdf_object" )
@@ -53,7 +63,7 @@ class PlotRooHistogram(PlotHistogram):
         '''
         # Dirty trick to get correct normalization.
         # Plot data and model on frame then get the model back from the frame.
-        frame = self.var.frame()
+        frame = self.x.frame()
         roohist.plotOn( frame )
         roofunc.plotOn( frame, r.RooFit.Name("pdf_object") )
         roofunc.plotOn( frame, r.RooFit.Components(comp),r.RooFit.Name("pdf_component") )
