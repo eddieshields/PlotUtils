@@ -31,7 +31,7 @@ class PlotAbs:
         Initiate class
         '''
         # Set font.
-        #rc('font',**{'family':'serif','serif':['Roman']}) 
+        rc('font',**{'family':'serif','serif':['Roman']}) 
         rc('text', usetex=True)
 
         # Create figure.
@@ -90,17 +90,14 @@ class PlotAbs:
             print('Saved figure to '+output)
         return self.ax, self.fig
 
-    def add_LHCbLabel(self,simulation=False,preliminary=True,xpos=0.8,ypos=0.9,lhcbfontsize=35,labelfontsize=25):
+    def add_LHCbLabel(self,xpos=0.1,ypos=0.9,label='',lhcbfontsize=25,**kwargs):
         #Add LHCb logo
         if ( self.logy ): xpos, ypos = math.log(xpos), math.log(ypos)
-        self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),"\\textbf{LHCb}",fontsize=lhcbfontsize)
-        if ( simulation ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.055)*(self.ymax-self.ymin)),"\\textit{simulation}",fontsize=labelfontsize)
-        else:
-            if ( preliminary ): self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+((ypos-0.055)*(self.ymax-self.ymin)),"\\textit{preliminary}",fontsize=labelfontsize)
-
+        self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),"\\textbf{LHCb} \\textit{%s}"%label,fontsize=lhcbfontsize,**kwargs)
+        
         return
 
-    def add_text(self,text,xpos,ypos):
+    def add_text(self,text,xpos,ypos,**kwargs):
         '''
         Add text to main figure.
         '''
@@ -141,6 +138,21 @@ class PlotAbs:
 
         return
 
+    def add_vline(self,x,**kwargs):
+        '''
+        Add a vertical line
+        '''
+        self.ax.axvline(x=x,**kwargs)
+
+        return
+
+    def add_hline(self,y,**kwargs):
+        '''
+        Add a horizontal line.
+        '''
+        self.ax.axhline(y=y,**kwargs)
+
+        return
 
     def add_pull(self,x,y):
         '''

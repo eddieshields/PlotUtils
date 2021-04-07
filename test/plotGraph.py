@@ -18,8 +18,10 @@ def main():
     ff.SetParameter(2,1)
     gr.Fit('ff','S')
     
-    fig = PlotGraph(gr,func=ff,xtitle='x',ytitle='y',confidencebands=True).plot()
-    fig.savefig('figs/example_graph.pdf')
+    gp = PlotGraph(gr,func=ff,xtitle='x',ytitle='y',confidencebands=True)
+    gp.add_LHCbLabel(0.01,0.9,'Preliminary')
+    gp.plot('figs/example_graph.pdf')
+
 
 
 #-------------------------
