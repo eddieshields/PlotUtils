@@ -101,7 +101,7 @@ class PlotAbs:
         '''
         Add text to main figure.
         '''
-        self.ax.text(xpos,ypos,text,**kwargs)
+        self.ax.text(self.xmin+(xpos*(self.xmax-self.xmin)),self.ymin+(ypos*(self.ymax-self.ymin)),text,**kwargs)
         
         return
 
