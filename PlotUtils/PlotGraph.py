@@ -104,15 +104,15 @@ class PlotGraph(PlotAbs):
 
         return
 
-    def plot_break(self,break1,break2,output):
+    def plot_break(self,break1,break2,output=0):
         '''
         Plot graph that is broken in the x-axis.
-        Code taken from https://stackoverflow.com/questions/32185411/break-in-x-axis-of-matplotlib
+        Code adapted from https://stackoverflow.com/questions/32185411/break-in-x-axis-of-matplotlib
         '''
         self.fig = plt.figure(figsize=(12,8))
         self.spec = gridspec.GridSpec(ncols=2, nrows=3, width_ratios=[break1-self.xmin, self.xmax-break2], hspace=None)
         self.ax = self.fig.add_subplot(self.spec[0])
-        self.ax2 = self.fig.add_subplot(self.spec[1])
+        self.ax2 = self.fig.add_subplot(self.spec[1],sharey=self.ax)
 
         if ( self.ff ):
             # Plot confidence bands.
@@ -149,7 +149,9 @@ class PlotGraph(PlotAbs):
         self.ax2.spines['left'].set_visible(False)
         self.ax.yaxis.tick_left()
         self.ax2.tick_params(labelright='off')
-        self.ax2.yaxis.tick_right()
+        self.ax2.axes.yaxis.set_visible(False)
+        #self.ax2.yaxis.tick_right()
+        #self.ax2.yaxis.set_yticks([])
 
         d = .015 # how big to make the diagonal lines in axes coordinates
         # arguments to pass plot, just so we don't keep repeating them
@@ -167,9 +169,8 @@ class PlotGraph(PlotAbs):
         self.ax.set_ylabel('$%s$'%self.ytitle,fontsize=35,horizontalalignment='right', y=1.0)
         self.ax.tick_params(axis='both', which='major', labelsize=30)
 
-        #if ( self.ymax ): 
-        #    self.ax.set_ylim(self.ymin,self.ymax)
-        #    self.ax2.set_ylim(self.ymin,self.xmin)
+        if ( self.ymax ): 
+            self.ax.set_ylim(self.ymin,self.ymax)
         
         margins = {  #     vvv margin in inches
         		"left"   : 0.17,
