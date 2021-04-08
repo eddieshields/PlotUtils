@@ -125,7 +125,7 @@ class PlotGraph(PlotAbs):
                 one_x, one_y, one_xerr, one_yerr = listfromgrapherrors( onesigma_band )
                 if ( self.blind ): one_y = self.blindlist( one_y )
                 self.add_confidenceband(one_x,one_y,one_yerr,color='lime')
-                self.ax2.fill_between(one_x,one_y-one_yerr,one_y+one_yerr,color='yellow')
+                self.ax2.fill_between(one_x,one_y-one_yerr,one_y+one_yerr,color='lime')
 
             # Plot fit shape.
             x_vals, pdf_vals = listfromtf1( self.ff )
