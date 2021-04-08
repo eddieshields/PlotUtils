@@ -121,6 +121,14 @@ class PlotAbs:
 
         return
 
+    def add_scatter(self,x,y,**kwargs):
+        '''
+        Add a scatter plot.
+        '''
+        self.ax.scatter(x,y,**kwargs)
+
+        return
+
     def add_fill(self,x,y,**kwargs):
         '''
         Add fill plot to figure.

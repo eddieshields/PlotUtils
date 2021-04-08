@@ -31,7 +31,6 @@ class PlotGraph(PlotAbs):
         self.errors = errors
         self.confidencebands = confidencebands
 
-        self.components = kwargs['components'] if ( kwargs.__contains__('components') ) else {}
 
     def plot(self,output=0):
         '''
@@ -49,9 +48,6 @@ class PlotGraph(PlotAbs):
                 if ( self.blind ): one_y = self.blindlist( one_y )
                 self.add_confidenceband(one_x,one_y,one_yerr,color='lime')
 
-            if ( self.components ):
-                self.addcomponents( self.components )
-            
             # Plot fit shape.
             x_vals, pdf_vals = listfromtf1( self.ff )
             if ( self.blind ): pdf_vals = self.blindlist( pdf_vals )
@@ -94,12 +90,15 @@ class PlotGraph(PlotAbs):
 
         return
 
-    def addcomponents(self,components):
+    def add_graph(self,gr,**kwargs):
         '''
-        Plots components
+        Add an additional TGraph.
         '''
-        for comp, settings in components.items():
-            x, y, x_err, y_err = listfromgrapherrors( comp )
-            self.add_errorbar(x,y,x_err,y_err,**settings)
+        if ( isinstance(gr,r.TGraphErrors) ):
+            x, y, x_err, y_err = listfromgrapherrors( gr )
+            self.add_errorbar(x,y,x_err,y_err,**kwargs)
+        else:
+            x, y = listfromgraph( gr )
+            self.add_scatter(x,y,**kwargs)
 
         return
