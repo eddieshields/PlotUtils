@@ -22,7 +22,9 @@ def main():
     gp.add_LHCbLabel(0.01,0.9,'Preliminary')
     gp.plot('figs/example_graph.pdf')
 
-
+    gp = PlotGraph(gr,func=ff,xtitle='x',ytitle='y',confidencebands=True)
+    gp.add_LHCbLabel(0.01,0.9,'Preliminary')
+    gp.plot_break(4,8,'figs/example_graph_break.pdf')
 
 #-------------------------
 if __name__ == '__main__':
