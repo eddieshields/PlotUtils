@@ -24,6 +24,8 @@ class PlotRooHistogram(PlotHistogram):
 
         super(PlotRooHistogram, self).__init__(hist,func=tfunc,pull=pull,legend=legend,label=label,log_scale=log_scale,name=name,xname=xname,yname=yname)
 
+        self.setTitle()
+
     def add_component(self,name,title='',style='l',**kwargs):
         '''
         Takes a component of a RooAbsPdf and adds to plot.
@@ -69,4 +71,14 @@ class PlotRooHistogram(PlotHistogram):
         roofunc.plotOn( frame, r.RooFit.Components(comp),r.RooFit.Name("pdf_component") )
         func = frame.findObject( "pdf_component" )
         return func
+
+    def setTitle(self):
+        # x-title
+        self.xtitle  = self.x.GetTitle()
+        if ( self.x.getUnit() ): self.xtitle  += "\\ [%s]"%self.frame.getPlotVar().getUnit()
+
+        self.ytitle = "\\mathrm{Candidates}\\ /\\ "+str((self.x.getMax() - self.x.getMin())/self.data.numEntries())
+        if ( self.x.getUnit() ): self.ytitle += " %s"%self.x.getUnit()
+
+        return
 

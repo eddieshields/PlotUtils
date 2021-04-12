@@ -181,3 +181,13 @@ class PlotAbs:
         self.fig.align_ylabels((self.ax,self.ax_pull))
 
         return
+
+    def set_xtitle(self,xtitle):
+        self.xtitle = xtitle
+
+        return 
+
+    def set_ytitle(slef,ytitle):
+        self.ytitle = ytitle
+
+        return 

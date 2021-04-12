@@ -180,7 +180,7 @@ class PlotGraph(PlotAbs):
         		}
 
         if ( self.logy ): self.ax.set_yscale('log')
-        self.fig.subplots_adjust(hspace=0.1)
+        self.fig.subplots_adjust(wspace=0.1)
         self.fig.subplots_adjust(**margins)
 
         if ( output ):
