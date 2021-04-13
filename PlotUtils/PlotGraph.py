@@ -9,7 +9,7 @@ from PlotUtils.ROOTutils import *
 
 class PlotGraph(PlotAbs):
     def __init__(self,gr,func=False,errors=True,
-                 confidencebands=False,blind=False,legend=True,**kwargs):
+                 confidencebands=False,blind=False,legend=True,label='Data',fitlabel='Fit',**kwargs):
         '''
         Initiate class
         '''
@@ -32,6 +32,9 @@ class PlotGraph(PlotAbs):
         self.errors = errors
         self.confidencebands = confidencebands
 
+        self.datalabel = label
+        self.fitlabel = fitlabel
+
 
     def plot(self,output=0):
         '''
@@ -52,14 +55,14 @@ class PlotGraph(PlotAbs):
             # Plot fit shape.
             x_vals, pdf_vals = listfromtf1( self.ff )
             if ( self.blind ): pdf_vals = self.blindlist( pdf_vals )
-            self.add_plot(x_vals,pdf_vals,color='blue',linewidth=2.5,label='Fit')
+            self.add_plot(x_vals,pdf_vals,color='blue',linewidth=2.5,label=self.fitlabel)
 
         # Plot graph.
         x, y, x_err, y_err = listfromgrapherrors( self.gr )
         if ( self.blind ):
             print('\033[0;31m BLINDING RESULT \033[0m')
             y = self.blindlist(y)
-        self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,label='Data')
+        self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,label=self.datalabel)
 
         # Add legend.
         if ( self.legend ): self.add_legend(loc='upper left',fontsize=20,ncol=1,frameon=False)

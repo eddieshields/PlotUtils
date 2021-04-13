@@ -75,10 +75,13 @@ class PlotRooHistogram(PlotHistogram):
     def setTitle(self):
         # x-title
         self.xtitle  = self.x.GetTitle()
-        if ( self.x.getUnit() ): self.xtitle  += "\\ [%s]"%self.frame.getPlotVar().getUnit()
+        if ( self.x.getUnit() ): self.xtitle  += "\\ [%s]"%self.x.getUnit()
 
-        self.ytitle = "\\mathrm{Candidates}\\ /\\ "+str((self.x.getMax() - self.x.getMin())/self.data.numEntries())
-        if ( self.x.getUnit() ): self.ytitle += " %s"%self.x.getUnit()
+        # y-title
+        if ( isinstance(self.data,r.RooDataHist) ): self.ytitle = "\\mathrm{Candidates}\\ /\\ "+str((self.x.getMax() - self.x.getMin())/self.data.numEntries())
+        else: self.ytitle = "\\mathrm{Candidates}\\ /\\ "+str(self.x.getBinning().averageBinWidth())
+
+        if ( self.x.getUnit() ): self.ytitle += "\\ %s"%self.x.getUnit()
 
         return
 
