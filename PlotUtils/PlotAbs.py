@@ -45,6 +45,9 @@ class PlotAbs:
         else:
             self.ax = self.fig.add_subplot(111)
 
+        if ( log_scale ): self.ax.set_yscale('log')
+        self.logy = log_scale
+
         # Axis limits.
         self.xmin = 0
         self.xmax = 0
@@ -54,9 +57,6 @@ class PlotAbs:
         # Default titles.
         self.xtitle = xtitle
         self.ytitle = ytitle
-
-        # Scale.
-        self.logy = log_scale
 
     def set_plot(self,output=0):
         '''
@@ -81,7 +81,7 @@ class PlotAbs:
         		"top"    : 0.98
         		}
 
-        if ( self.logy ): self.ax.set_yscale('log')
+        
         self.fig.subplots_adjust(hspace=0)
         self.fig.subplots_adjust(**margins)
 
@@ -142,7 +142,10 @@ class PlotAbs:
         Add legend.
         Remeber to label all objects to be included in legend.
         '''
-        self.ax.legend(**kwargs)
+        handles, labels = self.ax.get_legend_handles_labels()
+        # sort both labels and handles by labels
+        labels, handles = zip(*sorted(zip(labels, handles), key=lambda t: t[0]))
+        self.ax.legend(handles, labels, **kwargs)
 
         return
 

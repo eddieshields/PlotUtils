@@ -13,14 +13,15 @@ class PlotRooHistogram(PlotHistogram):
     Wrapper class that allows RooFit Objects to be plotted with MatPltiLib.
     '''
     
-    def __init__(self,x,data,model,pull=True,legend=False,label='Preliminary',log_scale=False,name='canv',xname='',yname=''):
+    def __init__(self,x,data,model=0,pull=True,legend=False,label='Preliminary',log_scale=False,name='canv',xname='',yname=''):
         self.x = x
         self.data = data
         self.model = model
 
         hist = self.th1fromroodatahist( self.x , self.data )
 
-        if ( self.model ): tfunc = self.tf1fromroopdf( self.data , self.model ) 
+        if ( self.model ): tfunc = self.tf1fromroopdf( self.data , self.model )
+        else: tfunc = False
 
         super(PlotRooHistogram, self).__init__(hist,func=tfunc,pull=pull,legend=legend,label=label,log_scale=log_scale,name=name,xname=xname,yname=yname)
 
@@ -34,6 +35,19 @@ class PlotRooHistogram(PlotHistogram):
         x, y = listfromtf1( func )
         if ( style == 'l' ): self.add_plot(x,y,label=title,**kwargs)
         elif ( style == 'f' ): self.add_fill(x,y,label=title,**kwargs)
+
+        return
+
+    def add_data(self,data,style='p',**kwargs):
+        hist = self.th1fromroodatahist( self.x , data )
+        x, y, x_err, yerr = listfromhist( self.hist )
+
+        if ( style == 'p' ):
+            self.add_errorbar(x,y,x_err,y_err,ls=None,color='k',fmt='o',markersize=3.5,mfc='black',alpha=0.8,**kwargs)
+        elif ( style == 'l' ):
+            self.add_plot(x,y,linewidth=2.5,**kwargs)
+        elif ( style == 'f' ):
+            self.add_fill(x,y,**kwargs)
 
         return
 
