@@ -7,9 +7,10 @@ class FitPlot(Plot):
     def __init__(self, x, data, pdf, xsize=12, ysize=8, pull=True):
         super(FitPlot, self).__init__(xsize=xsize, ysize=ysize, pull=pull)
 
-        assert(isinstance(x, RooRealVar) and
-               isinstance(data, RooAbsData) and
-               isinstance(pdf, RooAbsPdf))
+        assert(isinstance(x, RooRealVar))
+        assert(isinstance(data, RooAbsData))
+        assert(isinstance(pdf, RooAbsPdf))
+
         self.x = x
         self.data = data
         self.pdf = pdf
