@@ -31,6 +31,25 @@ class Plot(object):
         else:
             setattr(self, 'ax', self.fig.add_subplot(111))
 
+    def add(self, *args, **kwargs):
+        try:
+            style = kwargs['style']
+        except:
+            KeyError('Style not specified')
+
+        # Remove style from arguments.
+        kwargs.pop('style')
+        if style == 'l':
+            self.plot(*args, **kwargs)
+        elif style == 'f':
+            self.fill_between(*args, **kwargs)
+        elif style == 'p':
+            self.errorbar(*args, **kwargs)
+        elif style == 'h':
+            self.hist(*args, **kwargs)
+
+        return
+
     def confidenceband(self, ff, ci, *args, **kwargs):
         points = confidence_band(ff, ci)
         self.ax.fill_between(**points, **kwargs)
