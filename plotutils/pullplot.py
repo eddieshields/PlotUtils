@@ -15,7 +15,9 @@ class PullPlot(Plot):
 
         self.color = color
 
-        self.ff = TF1('ff', 'gaus(0)', -3, 3)  # Fit function
+        self.ff = TF1('ff', 'gaus(0)',
+                      self.hist.GetXaxis().GetXmin(),
+                      self.hist.GetXaxis().GetXmax())  # Fit function
         self.res = self.hist.Fit(self.ff, 'NSQ')
         self.nf = TF1('nf', 'gaus(0)', -3, 3)  # Normalisation function
 
