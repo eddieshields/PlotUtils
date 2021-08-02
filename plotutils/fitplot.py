@@ -1,6 +1,9 @@
 from ROOT import RooRealVar, RooAbsData, RooAbsPdf, RooDataHist
 
 from plotutils.plot import Plot
+from plotutils._roofit_utils import (_convert_rooabsdata_to_th1,
+                                     _convert_rooabspdf_to_tf1)
+from plotutils._root_utils import calculate_pull
 
 
 class FitPlot(Plot):
@@ -28,8 +31,8 @@ class FitPlot(Plot):
         self.plot(x, pdf, data, color='blue', linewidth=2.5)
 
         # Add pull plot.
-        # if pull:
-        #     self.pull(x, data, pdf)
+        if pull:
+            self._calculate_pull()
 
         # Set title.
         self._set_titles(x, data)
@@ -47,11 +50,11 @@ class FitPlot(Plot):
 
         # y-title
         if isinstance(data, RooDataHist):
-            ytitle = ('\\mathrm{Candidates}\\ /\\ ',
-                      str((x.getMax() - x.getMin()) / data.numEntries()))
+            ytitle = ('\\mathrm{Candidates}\\ /\\ ' + str(
+                      (x.getMax() - x.getMin()) / data.numEntries()))
         else:
-            ytitle = ('\\mathrm{Candidates}\\ /\\ ',
-                      str(x.getBinning().averageBinWidth()))
+            ytitle = ('\\mathrm{Candidates}\\ /\\ ' + str(
+                      x.getBinning().averageBinWidth()))
 
         if x.getUnit():
             ytitle += '\\ %s' % x.getUnit()
@@ -67,6 +70,14 @@ class FitPlot(Plot):
         self.set_xlim(x.getMin(), x.getMax())
 
         return 0
+
+    def _calculate_pull(self):
+        hist = _convert_rooabsdata_to_th1(self.x, self.data)
+        ff = _convert_rooabspdf_to_tf1(self.x, self.pdf, self.data)
+        x, y = calculate_pull(hist, ff)
+        self.pullplot(x, y)
+
+        return
 
     def save(self, name):
         # re-plot signal on top of everything.

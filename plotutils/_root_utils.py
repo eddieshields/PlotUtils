@@ -7,12 +7,16 @@ from plotutils._roofit_utils import _convert_roofit_object
 
 
 def root_plotable(func):
-    def _root_converter(root_obj, *args, **kwargs):
-        if isinstance(root_obj, TObject):
-            plotable = _convert_object(root_obj, *args, **kwargs)
+    """
+    Wrapper around a matplotlib function to
+    plot ROOT object directly.
+    """
+    def _root_converter(*args, **kwargs):
+        if _check_for_root_object(*args, **kwargs):
+            plotable = _convert_object(*args, **kwargs)
             # Check if function accepts x and y key arguments.
             if 'x' not in inspect.signature(func).parameters.keys():
-                func(plotable['x'], plotable['y'], *args, **kwargs)
+                func(plotable['x'], plotable['y'], **kwargs)
             else:
                 # Remove keys that are not accepted by function.
                 remove = []
@@ -23,9 +27,25 @@ def root_plotable(func):
                     plotable.pop(r)
                 func(**plotable, **kwargs)
         else:
-            func(root_obj, *args, **kwargs)
+            func(*args, **kwargs)
 
     return _root_converter
+
+
+def _check_for_root_object(*args, **kwargs):
+    """
+    Check if any of the parameters passed
+    to the function are derived from the
+    ROOT base class TObject.
+    """
+    for obj in args:
+        if isinstance(obj, TObject):
+            return True
+    for obj in kwargs.values():
+        if isinstance(obj, TObject):
+            return True
+
+    return False
 
 
 def _convert_object(root_obj: TObject, *args, **kwargs):
@@ -228,3 +248,31 @@ def confidence_band(ff: TF1, ci: float, steps: int = 1000) -> dict:
     points = _calculate_confidence_band(ff, ci, steps)
     return {'x': points['x'], 'y1': points['y'] - points['yerr'],
             'y2': points['y'] + points['yerr']}
+
+
+def calculate_pull(hist: TH1, ff: TF1) -> tuple:
+    """
+    Calculate a pull plot between a histogram and a fitted function.
+
+    Parameters
+    ----------
+    hist : TH1
+        ROOT TH1 histogram
+    ff : TF1
+        ROOT TF1 function used to fit.
+
+    Returns
+    -------
+    x, y : np.array, np.array
+        points for pull plot
+    """
+    x, y = [], []
+    for n in range(1, hist.GetNbinsX() + 1):
+        x.append(hist.GetBinCenter(n))
+        if not hist.GetBinError(n):
+            y.append(0)
+            continue
+        y.append((hist.GetBinContent(n) - ff.Eval(hist.GetBinCenter(n))) / (
+                 hist.GetBinError(n)))
+
+    return x, y

@@ -9,13 +9,13 @@ from plotutils._root_utils import root_plotable, confidence_band
 
 
 class Plot(object):
-
     matplotlib.rc_file(
         os.path.dirname(os.path.realpath(__file__)) + '/matplotlibrc_LHCb')
     rc('font', **{'family': 'serif', 'serif': ['Roman']})
     rc('text', usetex=True)
 
     def __init__(self, xsize=12, ysize=8, pull=False):
+
         # Create figure.
         setattr(self, 'fig', plt.figure(figsize=(xsize, ysize)))
 
@@ -43,7 +43,7 @@ class Plot(object):
 
         return
 
-    def pull(self, x, y):
+    def pullplot(self, x, y):
         """
         Plot pull
 
@@ -52,9 +52,7 @@ class Plot(object):
         x, y : np.array, np.array
             Values of pull plot
         """
-        assert(self.pull)
-        binwidth = x[1] - x[0]
-        self.ax_pull.bar(x, y, color='lightskyblue', width=binwidth)
+        self.ax_pull.fill_between(x, y, step='pre', color='lightskyblue')
         self.ax_pull.axhline(y=0, color='lightskyblue', linestyle='--')
         self.ax_pull.axhline(y=3, color='red', linestyle='--')
         self.ax_pull.axhline(y=-3, color='red', linestyle='--')

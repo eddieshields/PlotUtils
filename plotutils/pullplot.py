@@ -4,7 +4,7 @@ from plotutils.plot import Plot
 
 
 class PullPlot(Plot):
-    def __init__(self, hist, pdf=None, color='blue',
+    def __init__(self, hist, pdf=None, color='blue', title=None,
                  xsize=12, ysize=8, pull=False):
         super(PullPlot, self).__init__(xsize=xsize, ysize=ysize, pull=pull)
 
@@ -25,6 +25,7 @@ class PullPlot(Plot):
         self.plot(self.ff, color=self.color)
 
         self._add_info()
+        self._set_title(title)
         self.set_ymin(0)
         self.set_xlim(-3, 3)
 
@@ -46,4 +47,14 @@ class PullPlot(Plot):
         self.add_text(sig, 0.63, 0.85, fontsize=30)
 
         self.ax.set_yticks([])
+        return
+
+    def _set_title(self, title: str):
+        t = ('\\left( v^{\\mathrm{meas.}} - v^{\\mathrm{true}} \\right)'
+             '/\\sigma_{v}')
+        if title:
+            self.set_xtitle(t.replace('v', title))
+        else:
+            self.set_xtitle(t.replace('v', self.hist.GetTitle()))
+
         return
