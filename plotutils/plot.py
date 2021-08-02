@@ -58,7 +58,7 @@ class Plot(object):
 
     def confidencebands(self, ff, *args, **kwargs):
         self.confidenceband(ff, 0.95, *args, color='yellow', **kwargs)
-        self.confidenceband(ff, 0.68, *args, color='green', **kwargs)
+        self.confidenceband(ff, 0.68, *args, color='lime', **kwargs)
 
         return
 

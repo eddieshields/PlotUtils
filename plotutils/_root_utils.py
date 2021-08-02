@@ -14,8 +14,10 @@ def root_plotable(func):
     def _root_converter(*args, **kwargs):
         if _check_for_root_object(*args, **kwargs):
             plotable = _convert_object(*args, **kwargs)
+            kwargs = _remove_from_kwargs('component', **kwargs)
             # Check if function accepts x and y key arguments.
-            if 'x' not in inspect.signature(func).parameters.keys():
+            if ('x' not in inspect.signature(func).parameters.keys()) or (
+                'y' not in inspect.signature(func).parameters.keys()):
                 func(plotable['x'], plotable['y'], **kwargs)
             else:
                 # Remove keys that are not accepted by function.
@@ -31,6 +33,12 @@ def root_plotable(func):
 
     return _root_converter
 
+
+def _remove_from_kwargs(key,**kwargs):
+    if key in kwargs.keys():
+        kwargs.pop(key)
+    
+    return kwargs
 
 def _check_for_root_object(*args, **kwargs):
     """
@@ -73,10 +81,10 @@ def _convert_root_object(root_obj: TObject) -> tuple:
     """
     if isinstance(root_obj, TH1):
         plotable = _convert_th1(root_obj)
-    elif isinstance(root_obj, TGraph):
-        plotable = _convert_tgraph(root_obj)
     elif isinstance(root_obj, TGraphErrors):
         plotable = _convert_tgrapherrors(root_obj)
+    elif isinstance(root_obj, TGraph):
+        plotable = _convert_tgraph(root_obj)
     elif isinstance(root_obj, TF1):
         plotable = _convert_tf1(root_obj)
 

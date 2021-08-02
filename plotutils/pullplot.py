@@ -29,7 +29,8 @@ class PullPlot(Plot):
         self._add_info()
         self._set_title(title)
         self.set_ymin(0)
-        self.set_xlim(-3, 3)
+        self.set_xlim(self.hist.GetXaxis().GetXmin(),
+                      self.hist.GetXaxis().GetXmax())
 
         return
 
